@@ -46,12 +46,20 @@ def save_tasks():
             json.dump(MENTION_TASKS, f, indent=2)
 
 def load_tasks():
-        global MENTION_TASKS
-        if os.path.exists(DATA_FILE):
+    global MENTION_TASKS
+    if os.path.exists(DATA_FILE):
+        try:
             with open(DATA_FILE, "r") as f:
-                MENTION_TASKS = json.load(f)
-        else:
+                data = f.read().strip()  # Đọc dữ liệu từ file
+                if not data:  # Nếu file trống
+                    MENTION_TASKS = []
+                else:
+                    MENTION_TASKS = json.loads(data)  # Chuyển dữ liệu thành JSON
+        except json.JSONDecodeError:
+            # Nếu có lỗi khi giải mã JSON, gán MENTION_TASKS thành mảng rỗng
             MENTION_TASKS = []
+    else:
+        MENTION_TASKS = []  # Nếu không có file, khởi tạo MENTION_TASKS là mảng rỗng
 
 async def greet_on_join(update: Update, context: ContextTypes.DEFAULT_TYPE):
     member = update.my_chat_member
