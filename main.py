@@ -242,8 +242,13 @@ async def todo_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         keyboard = None
 
-        keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("✅ Đã xử lý", callback_data=f"done_{idx}")]
+        if task['status'] == 'done':
+            keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("✅ Đã xử lý", callback_data="noop")]
+            ])
+        else:
+            keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton("✔️ Đánh dấu đã xử lý", callback_data=f"done_{idx}")]
         ])
 
         await update.message.reply_text(
